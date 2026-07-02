@@ -14,6 +14,7 @@ echo "1/7 Репы успешно обнволены"
 # Устанаваливаем или обноваяем python3
 echo "3/7 Устанавливаем python3"
 apt install -y python3
+apt install -y python3-venv
 echo "3/7 Успешно установили python3"
 
 # Созадем и запускаем окружение
