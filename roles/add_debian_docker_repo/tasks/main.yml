@@ -27,7 +27,7 @@
 
 - name: debug arch
   ansible.builtin.debug:
-    var: arch
+    var: arch.stdout
 
 - name: add docker apt repository
   ansible.builtin.copy:
@@ -37,7 +37,7 @@
       URIs: https://download.docker.com/linux/debian
       Suites: {{ ansible_distribution_release }}
       Components: stable
-      Architectures: {{ arch }}
+      Architectures: {{ arch.stdout }}
       Signed-By: /etc/apt/keyrings/docker.asc
     mode: '0644'
 
