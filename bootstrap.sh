@@ -7,9 +7,9 @@ apt update
 echo "1/7 Репы успешно обнволены"
 
 # Установка требуемых пакетов docker
-echo "2/7 Устанавливаем docker.io docker-compose-plugin"
-apt install -y docker.io docker-compose-plugin
-echo "2/7 Успешно установили docker.io docker-compose-plugin"
+#echo "2/7 Устанавливаем docker.io docker-compose-plugin"
+#apt install -y docker.io docker-compose-plugin
+#echo "2/7 Успешно установили docker.io docker-compose-plugin"
 
 # Устанаваливаем или обноваяем python3
 echo "3/7 Устанавливаем python3"
