@@ -27,9 +27,9 @@
     content: |
       Types: deb
       URIs: https://download.docker.com/linux/debian
-      Suites: bookworm
+      Suites: {{ ansible_distribution_release }}
       Components: stable
-      Architectures: amd64
+      Architectures: {{ ansible_architecture }}
       Signed-By: /etc/apt/keyrings/docker.asc
     mode: '0644'
 
