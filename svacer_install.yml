@@ -3,7 +3,7 @@
 - name: install svacer
   hosts: "{{ target | default('local')  }}"
   become: true
-  vars_file:
+  vars_files:
     - vars.yml
 
   roles:
@@ -13,7 +13,7 @@
     - role: environment_preparation
       tags:
         - always
-        
+
     - role: svacer_server_launch
       tags:
         - always
