@@ -8,7 +8,6 @@
 
   roles:
     - role: add_debian_docker_repo
-      when: ansible_distribution == "Debian"
 
     - role: environment_preparation
       tags:
