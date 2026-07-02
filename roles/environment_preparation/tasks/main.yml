@@ -1,6 +1,11 @@
 ---
 
-- name: make user docker
+- name: make docker group
+  ansible.builtin.group:
+    name: docker
+    state: present
+
+- name: make docker user
   ansible.builtin.user:
     name: docker
     shell: /bin/bash
