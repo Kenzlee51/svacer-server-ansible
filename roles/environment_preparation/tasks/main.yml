@@ -1,0 +1,53 @@
+---
+
+- name: make user docker
+  ansible.builtin.user:
+    name: docker
+    shell: /bin/bash
+    group: docker
+    create_home: yes
+
+- name: get passwd database
+  ansible.builtin.getent:
+    database: passwd
+
+- name: append USER to docker group
+  ansible.builtin.user:
+    name: "{{ main_user }}"
+    groups: docker
+    append: yes
+  when: 
+    - main_user is defined
+    - main_user in getent_passwd
+
+- name: install docker.io
+  ansible.builtin.apt: 
+    name: docker.io
+    state: present
+
+- name: install docker-compose-v2
+  ansible.builtin.apt: 
+    name: docker-compose-v2
+    state: present
+
+- name: ca-certificates
+  ansible.builtin.apt: 
+    name: ca-certificates
+    state: present
+
+- name: install curl
+  ansible.builtin.apt: 
+    name: curl
+    state: present
+
+- name: make dir for svacer-server
+  ansible.builtin.file:
+    path: "{{ svacer_server_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: download docker compose svacer
+  ansible.builtin.get_url:
+    url: https://svacer.ispras.ru/extra/docker-compose.yml
+    dest: "{{ svacer_server_dir }}/docker-compose.yml"
+    mode: '0644'

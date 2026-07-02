@@ -1,0 +1,6 @@
+---
+
+- name: launch svacer-server
+  community.docker.docker_compose_v2:
+    project_src: "{{ svacer_server_dir }}"
+    state: present

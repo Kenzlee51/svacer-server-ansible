@@ -1,0 +1,4 @@
+---
+
+main_user: "user"
+svacer_server_dir: "/home/{{ main_user }}/svacer-server"
