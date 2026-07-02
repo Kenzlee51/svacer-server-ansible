@@ -36,4 +36,4 @@ echo "6/7 Устанавливаем коллекции community.docker ansible
 echo "6/7 Успешно установили коллекции community.docker ansible в окружение venv"
 
 echo "7/7 Запускаем плейбук устанвоки svacer server"
-.venv/bin/ansible-playbook -i inventory svacer_install.yml
+.venv/bin/ansible-playbook -i inventory -vv svacer_install.yml
