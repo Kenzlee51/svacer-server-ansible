@@ -20,6 +20,11 @@
     - main_user is defined
     - main_user in getent_passwd
 
+- name: ca-certificates
+  ansible.builtin.apt: 
+    name: ca-certificates
+    state: present
+
 - name: install docker.io
   ansible.builtin.apt: 
     name: docker.io
@@ -28,11 +33,6 @@
 - name: install docker-compose-v2
   ansible.builtin.apt: 
     name: docker-compose-v2
-    state: present
-
-- name: ca-certificates
-  ansible.builtin.apt: 
-    name: ca-certificates
     state: present
 
 - name: install curl

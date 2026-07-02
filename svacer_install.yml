@@ -11,6 +11,9 @@
       tags:
         - always
 
+    - role: add_docker_repo
+      when: ansible_distribution == "Debian"
+
     - role: svacer_server_launch
       tags:
         - always
