@@ -34,8 +34,8 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
-  register: status
-  until: status is success
+  register: status_install_general_pack
+  until: status_install_general_pack is success
   retries: 20
   delay: 2
 
@@ -45,8 +45,8 @@
       - containerd.io
       - docker-ce
     state: present
-  register: status
-  until: status is success
+  register: status_install_service_pack
+  until: status_install_service_pack is success
   retries: 20
   delay: 2
   notify: Restart docker services
