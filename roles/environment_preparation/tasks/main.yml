@@ -51,6 +51,19 @@
   delay: 2
   notify: Restart docker services
 
+- name: add docker hub mirrors
+  ansible.builtin.copy:
+    dest: /etc/docker/daemon.json
+    content: |
+      {
+        "registry-mirrors": [
+          "https://dockerhub1.beget.com", 
+          "https://mirror.gcr.io"
+        ]
+      }
+    mode: '0644'
+  notify: Restart docker services
+
 - name: make dir for svacer-server
   ansible.builtin.file:
     path: "{{ svacer_server_dir }}"
