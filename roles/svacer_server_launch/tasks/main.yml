@@ -4,3 +4,7 @@
   community.docker.docker_compose_v2:
     project_src: "{{ svacer_server_dir }}"
     state: present
+  register: status
+  until: status is success
+  retries: 40
+  delay: 2

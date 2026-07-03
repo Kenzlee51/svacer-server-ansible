@@ -34,6 +34,10 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+  register: status
+  until: status is success
+  retries: 20
+  delay: 2
 
 - name: install service req packages
   ansible.builtin.apt: 
@@ -41,6 +45,10 @@
       - containerd.io
       - docker-ce
     state: present
+  register: status
+  until: status is success
+  retries: 20
+  delay: 2
   notify: Restart docker services
 
 - name: make dir for svacer-server
