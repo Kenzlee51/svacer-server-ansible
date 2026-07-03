@@ -1,5 +1,8 @@
 ---
 
+- name: Validate role
+  ansible.builtin.include_tasks: validate.yml
+
 - name: apt update
   ansible.builtin.apt:
     update_cache: yes
@@ -15,9 +18,9 @@
     state: directory
     mode: '0755'
 
-- name: add docker gpg for debian
+- name: add docker gpg
   ansible.builtin.get_url:
-    url: https://download.docker.com/linux/debian/gpg
+    url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
     dest: "/etc/apt/keyrings/docker.asc"
     mode: '0644'
 
@@ -34,7 +37,7 @@
     dest: /etc/apt/sources.list.d/docker.sources
     content: |
       Types: deb
-      URIs: https://download.docker.com/linux/debian
+      URIs: https://download.docker.com/linux/{{ ansible_distribution | lower }}
       Suites: {{ ansible_distribution_release }}
       Components: stable
       Architectures: {{ arch.stdout }}

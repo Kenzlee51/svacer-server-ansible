@@ -7,8 +7,7 @@
     - vars.yml
 
   roles:
-    - role: add_debian_docker_repo
-      when: 
+    - role: add_docker_repo
 
     - role: environment_preparation
       tags:
