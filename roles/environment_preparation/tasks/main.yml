@@ -25,18 +25,23 @@
     - main_user is defined
     - main_user in getent_passwd
 
-- name: install req packages
+- name: install general req packages
   ansible.builtin.apt: 
     name: 
       - ca-certificates
       - curl
-      - docker-ce
       - docker-ce-cli
-      - containerd.io
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
 
+- name: install service req packages
+  ansible.builtin.apt: 
+    name:
+      - containerd.io
+      - docker-ce
+    state: present
+  notify: Restart docker services
 
 - name: make dir for svacer-server
   ansible.builtin.file:
@@ -49,3 +54,5 @@
     url: https://svacer.ispras.ru/extra/docker-compose.yml
     dest: "{{ svacer_server_dir }}/docker-compose.yml"
     mode: '0644'
+
+handlers
