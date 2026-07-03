@@ -2,6 +2,10 @@
 
 set -e
 
+echo "0/7 Чистим остатки прошлых прогонов"
+rm -f /etc/apt/sources.list.d/docker.sources
+echo "0/7 Успешно очистили систему!"
+
 echo "1/7 Обновляем репы"
 apt update
 echo "1/7 Репы успешно обнволены"
