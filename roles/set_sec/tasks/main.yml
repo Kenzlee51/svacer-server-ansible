@@ -3,7 +3,7 @@
 - name: verif of existing keys
   ansible.builtin.stat:
     path: "{{ path_to_main_sshkey }}"
-    register: main_sshkey
+  register: main_sshkey
 
 - name: Generate main main_sshkey
   block:
