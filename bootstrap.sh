@@ -61,7 +61,8 @@ echo "5/7 Успешно утсановили ansible в окружение venv
 # Устанвока коллекции  для ansible
 echo "6/7 Устанавливаем коллекции community.docker ansible в окружение venv"
 .venv/bin/ansible-galaxy collection install community.docker
-.venv/bin/ansible-galaxy collection install community.crypto.openssh_keypair
+.venv/bin/ansible-galaxy collection install community.crypto
+.venv/bin/ansible-galaxy collection install ansible.posix
 echo "6/7 Успешно установили коллекции community.docker ansible в окружение venv"
 
 echo "7/7 Запускаем плейбук устанвоки svacer server"
