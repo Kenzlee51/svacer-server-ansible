@@ -2,6 +2,29 @@
 
 set -e
 
+TARGET_IP=""
+VERBOSE_ANSIBLE=""
+
+# Разбираем аргументы
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -r|--remote)
+            TARGET_IP="$2"
+            shift 2
+            ;;
+        -v|-vv|-vvv)
+            VERBOSE_ANSIBLE="$1"
+            shift
+            ;;
+        -*|--*|*)
+            echo "Unknown option: $1" >&2
+            exit 1
+            ;;
+    esac
+done
+
+
+
 echo "0/7 Чистим остатки прошлых прогонов"
 rm -f /etc/apt/sources.list.d/docker.sources
 rm -f /etc/docker/daemon.json
@@ -35,10 +58,11 @@ echo "5/7 Устанавливаем ansible в окружение venv"
 .venv/bin/pip install ansible
 echo "5/7 Успешно утсановили ansible в окружение venv"
 
-# Устанвока коллекции community.docker для ansible
+# Устанвока коллекции  для ansible
 echo "6/7 Устанавливаем коллекции community.docker ansible в окружение venv"
 .venv/bin/ansible-galaxy collection install community.docker
+.venv/bin/ansible-galaxy collection install community.crypto.openssh_keypair
 echo "6/7 Успешно установили коллекции community.docker ansible в окружение venv"
 
 echo "7/7 Запускаем плейбук устанвоки svacer server"
-.venv/bin/ansible-playbook -i inventory -vv svacer_install.yml
+.venv/bin/ansible-playbook -i inventory $VERBOSE_ANSIBLE svacer_install.yml -e target="$TARGET_IP"

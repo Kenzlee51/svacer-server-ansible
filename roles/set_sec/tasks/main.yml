@@ -1,0 +1,82 @@
+---
+
+- name: verif of existing keys
+  ansible.builtin.stat:
+    path: "{{ path_to_main_sshkey }}"
+    register: main_sshkey
+
+- name: Generate main main_sshkey
+  block:
+    - name: generate main main_sshkey
+      community.crypto.openssh_keypair:
+        path: "{{ path_to_main_sshkey }}"
+        type: ed25519
+        #passphrase: "{{ main_passphrase }}"
+        regenerate: fail #повторая генерация ключа только в случае - 1. ключ нельзя прочиатб (поврежден) 2 - ключ не соовтетствуюет заданным параметрам (то есть не ed25519) и не подходит заданная парольная фраза, 3. ключ остутствет
+      #when: main_sshkey.stat.exists == false #избыточное условие. модуль сам делает все проверки. оставляю в качестве примера
+      delegate_to: localhost
+  rescue:
+    - name: Print ssh keygen errors
+      ansible.builtin.debug:
+        msg: "SSH key are exists! Check type and passphrase."
+
+- name: Test connection
+  block:
+  - name: first connection #Если ключ не подходит вернет ошибку сразу, если подключения ент .упадет по таймауту
+    ansible.builtin.wait_for_connection:
+      delay: 10
+      timeout: 30
+    #ignore_errors: true
+    register: ssh_check #ssh_check.failed != false
+    #when: main_sshkey.stat.exists
+  rescue:
+    - name: Print connection errors
+      ansible.builtin.debug:
+        msg: "Check settings ssh on remote vm"
+
+- name: Stop if the connection is not established
+  ansible.builtin.fail:
+    msg: "Соединение не устанволено даже по паролю. Проверить настройки sshd_conf на целевой вм"
+  when: ssh_check is failed
+
+- name: Copy ssh key.pub on remote vm
+  ansible.posix.authorized_key:
+    user: "{{ main_user }}"
+    state: present
+    key: "{{ lookup('file', path_to_main_sshkey + '.pub') }}"
+
+- name: Check connection with ssh key.pub only
+  ansible.builtin.wait_for_connection:
+    delay: 5
+    timeout: 20
+  vars:
+    ansible_ssh_private_key_file: "{{ path_to_main_sshkey }}"
+    ansible_ssh_common_args: "-o PreferredAuthentications=publickey -o PasswordAuthentication=no"
+  register: ssh_check_key
+  ignore_errors: true
+
+- name: Stop if key doesn't work
+  ansible.builtin.fail:
+    msg: "Ключ скопированЮ но подключение по ключу не сработало. Проверь права ~/.ssh (700) и authorized_keys (600) на target. sshd_config НЕ менялся."
+  when: ssh_check_key is failed
+
+- name: set PubkeyAuthentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'PubkeyAuthentication yes'
+    regexp: '^#?\s*PubkeyAuthentication\s+'
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: Restart sshd services
+
+- name: set PasswordAuthentication
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/sshd_config
+    line: 'PasswordAuthentication no'
+    regexp: '^#?\s*PasswordAuthentication\s+'
+    state: present
+    validate: 'sshd -t -f %s'
+  notify: Restart sshd services
+
+- name: Flush handlers before launching svacer
+  ansible.builtin.meta: flush_handlers 

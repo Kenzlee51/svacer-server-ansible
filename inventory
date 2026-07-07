@@ -1,4 +1,11 @@
-[local]
-localhost ansible_connection=local
+all:
+  hosts:
+    localhost:
+      ansible_connection: local
+  vars:
+    ansible_connection: ssh
+    ansible_user: user
+    ansible_password: 12345678
 
-[remote]
+
+
