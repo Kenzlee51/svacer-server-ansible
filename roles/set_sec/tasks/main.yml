@@ -1,4 +1,9 @@
 ---
+- name: create ~/.ssh on master
+  ansible.builtin.file:
+    path: /home/user/.ssh
+    state: directory
+    mode: '0700'
 
 - name: verif of existing keys
   ansible.builtin.stat:
@@ -17,7 +22,7 @@
       delegate_to: localhost
   rescue:
     - name: Print ssh keygen errors
-      ansible.builtin.debug:
+      ansible.builtin.fail:
         msg: "SSH key are exists! Check type and passphrase."
 
 - name: Test connection
