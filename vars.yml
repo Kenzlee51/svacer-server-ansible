@@ -1,7 +1,6 @@
 ---
 
 main_user: "user"
-main_ip: "192.168.25.255"
 path_to_main_sshkey: /home/{{ main_user }}/.ssh/main
 main_user_password: "12345678"
 main_passphrase: "super_secret_password"

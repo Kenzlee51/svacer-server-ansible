@@ -1,7 +1,7 @@
 ---
 
 - name: set ssh
-  hosts: localhost
+  hosts: target
   become: true
   vars_files:
     - vars.yml
