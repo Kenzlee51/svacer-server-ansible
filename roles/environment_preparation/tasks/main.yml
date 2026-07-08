@@ -59,6 +59,7 @@
         "registry-mirrors": [
           "https://dockerhub1.beget.com", 
           "https://mirror.gcr.io"
+        ]
       }
     mode: '0644'
   notify: Restart docker services
