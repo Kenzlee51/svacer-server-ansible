@@ -1,7 +1,7 @@
 ---
 
 - name: install svacer
-  hosts: "{{ target | default('local')  }}"
+  hosts: "{{ target | default('localhost')  }}"
   become: true
   vars_files:
     - vars.yml
