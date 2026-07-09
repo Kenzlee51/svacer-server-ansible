@@ -1,5 +1,14 @@
 ---
 
+- name: add remote host to inventory
+  hosts: localhost
+  tasks:
+    - name: add host
+      ansible.builtin.add_host:
+        name: "{{ target }}"
+        groups: all
+      when: target != 'localhost'
+
 - name: install svacer
   hosts: "{{ target | default('localhost')  }}"
   become: true
