@@ -1,0 +1,11 @@
+---
+
+- name: reminder user cred
+  ansible.builtin.pause:
+    prompt: "You are about to execute the playbook with the following target user parameters: \nUsername: {{ main_user }} \nUser Password: {{ '****' + main_user_password[-2:] }} \nSudo Password: {{ '****' + main_user_sudo_password[-2:] }} \nTARGET_IP: {{ target }} \nDo you want continue? \n Enter y/n"
+  register: check_answer
+
+- name: Interrupting execution
+  ansible.builtin.fail:
+    msg: "Execution stopped. \nSpecify the values ​​using the command: \n./bootstrap.sh -r ip_address -u username -p user_password -s sudo_password "
+  when: check_answer.user_input != "y" and check_answer.user_input != "yes" and check_answer.user_input != ""

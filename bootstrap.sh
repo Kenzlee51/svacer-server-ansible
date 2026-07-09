@@ -1,10 +1,21 @@
 #!/bin/bash
+# ./bootstrap.sh -r ip_address -u username -p user_password -s sudo_password
+# ../bootstrap.sh -r ip_address -a - запускаем в авторежиме без првоерки данных на удаленной машине
 
 set -e
 
-TARGET_IP=""
+TARGET_IP="" # -r
+MAIN_USER="" # -u
+MAIN_USER_PASSWORD="" # -p
+MAIN_USER_SUDO_PASSWORD="" # -s
 VERBOSE_ANSIBLE=""
+ARGS_FOR_ANSIBLE=""
 SKIP_TAGS_ARG=""
+TAGS_TO_SKIP=""
+AUTO_TEG=""
+AUTO="false" #Флаг для плейбука. Ручная или автоматическая сборка
+
+
 
 # Разбираем аргументы
 while [[ $# -gt 0 ]]; do
@@ -13,8 +24,24 @@ while [[ $# -gt 0 ]]; do
             TARGET_IP="-e target=$2"
             shift 2
             ;;
+        -u|--user-target)
+            MAIN_USER="-e main_user=$2"
+            shift 2
+            ;;
+        -p|--password-target)
+            MAIN_USER_PASSWORD="-e main_user_password=$2"
+            shift
+            ;;
+        -s|--sudo-password)
+            MAIN_USER_SUDO_PASSWORD="-e main_user_sudo_password=$2"
+            shift
+            ;;
         -v|-vv|-vvv)
             VERBOSE_ANSIBLE="$1"
+            shift
+            ;;
+        -a|-auto)
+            AUTO="true"
             shift
             ;;
         -*|--*|*)
@@ -25,8 +52,22 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$TARGET_IP" ]]; then
-    SKIP_TAGS_ARG="--skip-tags prod"
+    TAGS_TO_SKIP="prod"
 fi
+
+if [[ "$AUTO" != "false" ]]; then
+    if [[ -n "$TAGS_TO_SKIP" ]]; then
+        TAGS_TO_SKIP="$TAGS_TO_SKIP,verification"
+    else
+        TAGS_TO_SKIP="verification"
+    fi
+fi
+
+if [[ -n "$TAGS_TO_SKIP" ]]; then
+    SKIP_TAGS_ARG="--skip-tags $TAGS_TO_SKIP"
+fi
+
+ARGS_FOR_ANSIBLE="$TARGET_IP $MAIN_USER $MAIN_USER_PASSWORD $MAIN_USER_SUDO_PASSWORD"
 
 
 echo "0/7 Чистим остатки прошлых прогонов"
@@ -70,4 +111,4 @@ echo "6/7 Устанавливаем коллекции community.docker ansible
 echo "6/7 Успешно установили коллекции community.docker ansible в окружение venv"
 
 echo "7/7 Запускаем плейбук устанвоки svacer server"
-.venv/bin/ansible-playbook -i inventory $VERBOSE_ANSIBLE svacer_install.yml $SKIP_TAGS_ARG $TARGET_IP
+.venv/bin/ansible-playbook -i inventory $VERBOSE_ANSIBLE svacer_install.yml $SKIP_TAGS_ARG $ARGS_FOR_ANSIBLE

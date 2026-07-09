@@ -1,5 +1,15 @@
 ---
 
+- name: User data verification
+  hosts:
+    - localhost
+  vars_files:
+   - vars.yml
+  roles:
+    - role: user_data_verification
+      tags: 
+        - verification
+        
 - name: add remote host to inventory
   hosts: localhost
   vars_files:
