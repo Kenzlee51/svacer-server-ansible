@@ -2,6 +2,7 @@
 
 main_user: "user"
 path_to_main_sshkey: /home/{{ main_user }}/.ssh/main
-ansible_become_password: "12345678"
+main_user_password: "12345678"
+main_user_sudo_password: "12345678"
 main_passphrase: "super_secret_password"
 svacer_server_dir: "/home/{{ main_user }}/svacer-server"
