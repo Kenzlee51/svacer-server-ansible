@@ -2,6 +2,8 @@
 
 - name: add remote host to inventory
   hosts: localhost
+  vars_files:
+    - vars.yml
   tasks:
     - name: add host
       ansible.builtin.add_host:
