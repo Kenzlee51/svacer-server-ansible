@@ -4,7 +4,7 @@ all:
       ansible_connection: local
   vars:
     ansible_connection: ssh
-    ansible_password: "{{ main_user_password }}"
+    ansible_password: "{{ ansible_become_password }}"
     ansible_user: "{{ main_user }}"
 
 
